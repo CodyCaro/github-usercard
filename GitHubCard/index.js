@@ -2,6 +2,28 @@
            (replacing the palceholder with your Github name):
            https://api.github.com/users/<your name>
 */
+// const promise = axios.get("https://api.github.com/users/CodyCaro");
+// console.log(promise);
+const followersArray = [
+  "CodyCaro",
+  "tetondan",
+  "dustinmyers",
+  "justsml",
+  "luishrd",
+  "bigknell"
+];
+
+followersArray.forEach(follower => {
+  const promise = axios.get(`https://api.github.com/users/${follower}`);
+  promise
+    .then(axiosData => {
+      console.log("axios data: " + axiosData.data);
+      new GithubCards(axiosData);
+    })
+    .catch(err => {
+      console.log("error: " + err);
+    });
+});
 
 /* Step 2: Inspect and study the data coming back, this is YOUR 
    github info! You will need to understand the structure of this 
@@ -24,8 +46,6 @@
           user, and adding that card to the DOM.
 */
 
-const followersArray = [];
-
 /* Step 3: Create a function that accepts a single object as its only argument,
           Using DOM methods and properties, create a component that will return the following DOM element:
 
@@ -45,6 +65,63 @@ const followersArray = [];
 </div>
 
 */
+
+class GithubCards {
+  constructor(githubData) {
+    this.githubDataProperties = githubData.data;
+    const cards = document.querySelector(".cards");
+    cards.appendChild(this.createGithubCard(this.githubDataProperties));
+  }
+
+  createGithubCard(githubDataProperties) {
+    const card = document.createElement("div");
+    card.classList.add("card");
+
+    const cardImage = document.createElement("img");
+    cardImage.src = githubDataProperties.avatar_url;
+    card.appendChild(cardImage);
+
+    const cardInfo = document.createElement("div");
+    cardInfo.classList.add("card-info");
+    card.appendChild(cardInfo);
+
+    const name = document.createElement("h3");
+    name.classList.add("name");
+    name.textContent = githubDataProperties.name;
+    cardInfo.appendChild(name);
+
+    const userName = document.createElement("p");
+    userName.classList.add("username");
+    userName.textContent = githubDataProperties.login;
+    cardInfo.appendChild(userName);
+
+    const location = document.createElement("p");
+    location.textContent = `Location: ${githubDataProperties.login}`;
+    cardInfo.appendChild(location);
+
+    const profileContent = document.createElement("p");
+    profileContent.textContent = "Profile: ";
+    cardInfo.appendChild(profileContent);
+
+    const profileLink = document.createElement("a");
+    profileLink.href = githubDataProperties.html_url;
+    profileContent.appendChild(profileLink);
+
+    const followerCount = document.createElement("p");
+    followerCount.textContent = `Followers: ${githubDataProperties.followers}`;
+    cardInfo.appendChild(followerCount);
+
+    const followingCount = document.createElement("p");
+    followingCount.textContent = `Following: ${githubDataProperties.following}`;
+    cardInfo.appendChild(followingCount);
+
+    const userBio = document.createElement("p");
+    userBio.textContent = `Bio: ${githubDataProperties.bio}`;
+    cardInfo.appendChild(userBio);
+
+    return card;
+  }
+}
 
 /* List of LS Instructors Github username's: 
   tetondan
