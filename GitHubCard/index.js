@@ -2,17 +2,28 @@
            (replacing the palceholder with your Github name):
            https://api.github.com/users/<your name>
 */
-const promise = axios.get("https://api.github.com/users/CodyCaro");
-console.log(promise);
+// const promise = axios.get("https://api.github.com/users/CodyCaro");
+// console.log(promise);
+const followersArray = [
+  "CodyCaro",
+  "tetondan",
+  "dustinmyers",
+  "justsml",
+  "luishrd",
+  "bigknell"
+];
 
-promise
-  .then(axiosData => {
-    console.log("axios data: " + axiosData.data);
-    new GithubCards(axiosData);
-  })
-  .catch(err => {
-    console.log("error: " + err);
-  });
+followersArray.forEach(follower => {
+  const promise = axios.get(`https://api.github.com/users/${follower}`);
+  promise
+    .then(axiosData => {
+      console.log("axios data: " + axiosData.data);
+      new GithubCards(axiosData);
+    })
+    .catch(err => {
+      console.log("error: " + err);
+    });
+});
 
 /* Step 2: Inspect and study the data coming back, this is YOUR 
    github info! You will need to understand the structure of this 
@@ -34,8 +45,6 @@ promise
           Using that array, iterate over it, requesting data for each user, creating a new card for each
           user, and adding that card to the DOM.
 */
-
-const followersArray = [];
 
 /* Step 3: Create a function that accepts a single object as its only argument,
           Using DOM methods and properties, create a component that will return the following DOM element:
